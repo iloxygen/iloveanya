@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Для Ани 🖤</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #070508;
+      font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #ffffff;
+    }
+
+    .bg-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255, 42, 109, 0.22) 0%, rgba(120, 14, 54, 0.1) 42%, rgba(7, 5, 8, 1) 80%),
+        linear-gradient(160deg, #0d070c 0%, #060407 55%, #12060d 100%);
+    }
+
+    .bg-photo {
+      position: absolute;
+      inset: -4%;
+      background-image: url('anya.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.44;
+      transform: scale(1);
+      transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+      filter: brightness(0.46) contrast(1.08) saturate(1.1);
+    }
+
+    .bg-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 42%, transparent 25%, rgba(6, 4, 7, 0.85) 95%),
+        linear-gradient(to top, rgba(6, 4, 7, 0.94) 0%, rgba(6, 4, 7, 0.25) 45%, rgba(6, 4, 7, 0.65) 100%);
+      pointer-events: none;
+    }
+
+    #heartCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    .center-stage {
+      position: fixed;
+      top: 41%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      text-align: center;
+      pointer-events: none;
+      width: min(86vw, 440px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .heart-phrase {
+      font-family: 'Unbounded', sans-serif;
+      font-size: clamp(18px, 4.6vw, 27px);
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+      color: #fff;
+      text-shadow:
+        0 0 18px rgba(255, 51, 119, 0.85),
+        0 0 42px rgba(255, 25, 95, 0.55),
+        0 2px 10px rgba(0, 0, 0, 0.9);
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .heart-phrase.switching {
+      opacity: 0;
+      transform: scale(0.92) translateY(4px);
+    }
+
+    .tap-hint {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: lowercase;
+      color: rgba(255, 195, 218, 0.72);
+      background: rgba(255, 45, 110, 0.12);
+      border: 1px solid rgba(255, 85, 140, 0.25);
+      padding: 5px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      animation: pulseHint 2.4s infinite ease-in-out;
+    }
+
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.55; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-2px); }
+    }
+
+    .bottom-card-wrap {
+      position: fixed;
+      bottom: max(22px, env(safe-area-inset-bottom, 22px));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      width: min(92vw, 460px);
+    }
+
+    .slide-card {
+      position: relative;
+      background: rgba(18, 12, 20, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 22px;
+      padding: 18px 20px 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.25s ease;
+    }
+
+    .slide-card:active {
+      transform: scale(0.985);
+    }
+
+    .slide-card:hover {
+      border-color: rgba(255, 85, 140, 0.35);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .slide-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ff6b9d;
+      background: rgba(255, 65, 130, 0.14);
+      padding: 3px 9px;
+      border-radius: 8px;
+    }
+
+    .next-hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.48);
+      transition: color 0.2s ease;
+    }
+
+    .slide-card:hover .next-hint {
+      color: rgba(255, 180, 210, 0.9);
+    }
+
+    .slide-text {
+      font-size: clamp(14px, 3.6vw, 15.5px);
+      font-weight: 500;
+      line-height: 1.48;
+      color: rgba(255, 255, 255, 0.92);
+      min-height: 46px;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .slide-text.fading {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .dot {
+      height: 3px;
+      flex: 1;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.16);
+      transition: background 0.3s ease;
+    }
+
+    .dot.active {
+      background: #ff4785;
+      box-shadow: 0 0 8px rgba(255, 71, 133, 0.7);
+    }
+
+    .floating-sticker {
+      position: fixed;
+      pointer-events: none;
+      z-index: 5;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(255, 45, 110, 0.22);
+      border: 1px solid rgba(255, 100, 150, 0.45);
+      backdrop-filter: blur(8px);
+      padding: 5px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+      animation: floatUp 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.7); }
+      20% { opacity: 1; transform: translate(-50%, -18px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -85px) scale(0.95); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-wrapper">
+    <div class="bg-photo" id="bgPhoto"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <canvas id="heartCanvas"></canvas>
+
+  <div class="center-stage">
+    <div class="heart-phrase" id="heartPhrase">Я люблю Аню</div>
+    <div class="tap-hint" id="tapHint">нажми на сердце 🖤</div>
+  </div>
+
+  <div class="bottom-card-wrap">
+    <div class="slide-card" id="slideCard">
+      <div class="card-top">
+        <span class="slide-tag" id="slideTag">глаза и вайб</span>
+        <span class="next-hint">жми дальше →</span>
+      </div>
+      <div class="slide-text" id="slideText">
+        У тебя нереальные глаза и лучший стиль, даже когда ты просто валяешься на полу после пар
+      </div>
+      <div class="dots" id="dotsContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    const heartPhrases = [
+      "Я люблю Аню",
+      "Ладно, люблю как друга 🖤",
+      "Жду когда перестанешь токсичить",
+      "На коленях извиняться не буду",
+      "С тобой хоть в дурку, хоть в палату",
+      "Готов наряжать с тобой ёлки",
+      "Ты самая вредная",
+      "Всё равно лучшая"
+    ];
+
+    const slides = [
+      {
+        tag: "глаза и вайб",
+        text: "У тебя нереальные глаза и лучший стиль, даже когда ты просто валяешься на полу после пар",
+        scale: "scale(1.0) translate(0px, 0px)"
+      },
+      {
+        tag: "главный токсик",
+        text: "Иногда ты бываешь максимально противной и требуешь извинений на коленях, но в этом весь твой шарм",
+        scale: "scale(1.07) translate(-1%, -1%)"
+      },
+      {
+        tag: "поддержка 100%",
+        text: "Обожаю твою веру в меня: «не сомневалась что проиграешь в теннис, горжусььь»",
+        scale: "scale(1.04) translate(1%, -1.5%)"
+      },
+      {
+        tag: "наша классика",
+        text: "Даже после ночных разборов полётов и фразы «убейте меня» ты всё равно остаёшься самой родной",
+        scale: "scale(1.08) translate(0px, 1%)"
+      }
+    ];
+
+    const stickers = [
+      "не сомневалась 🖤",
+      "горжусььь",
+      "токсик 😈",
+      "ля оно 👀",
+      "в палату 🏥",
+      "xx",
+      "жду извинений",
+      "красотка ✨"
+    ];
+
+    let phraseIdx = 0;
+    let slideIdx = 0;
+    let stickerIdx = 0;
+
+    const heartPhraseEl = document.getElementById('heartPhrase');
+    const tapHintEl = document.getElementById('tapHint');
+    const slideCardEl = document.getElementById('slideCard');
+    const slideTagEl = document.getElementById('slideTag');
+    const slideTextEl = document.getElementById('slideText');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const bgPhotoEl = document.getElementById('bgPhoto');
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dotsContainer.appendChild(dot);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function nextSlide() {
+      slideIdx = (slideIdx + 1) % slides.length;
+      slideTextEl.classList.add('fading');
+
+      setTimeout(() => {
+        slideTagEl.textContent = slides[slideIdx].tag;
+        slideTextEl.textContent = slides[slideIdx].text;
+        bgPhotoEl.style.transform = slides[slideIdx].scale;
+        slideTextEl.classList.remove('fading');
+      }, 200);
+
+      dots.forEach((d, i) => d.classList.toggle('active', i === slideIdx));
+    }
+
+    slideCardEl.addEventListener('click', nextSlide);
+
+    let touchStartX = 0;
+    slideCardEl.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    slideCardEl.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 35) nextSlide();
+    }, { passive: true });
+
+    function spawnSticker(x, y) {
+      const el = document.createElement('div');
+      el.className = 'floating-sticker';
+      el.textContent = stickers[stickerIdx % stickers.length];
+      stickerIdx++;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1350);
+    }
+
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    let pulseBoost = 0;
+    let pointer = { x: -9999, y: -9999 };
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initParticles();
+    }
+
+    function heartPoint(t) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+      return { x, y };
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = width < 600 ? 420 : 620;
+      const scale = Math.min(width, height) * (width < 600 ? 0.024 : 0.022);
+      const cx = width / 2;
+      const cy = height * 0.41;
+
+      for (let i = 0; i < count; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const spread = 0.86 + Math.random() * 0.28;
+        const pt = heartPoint(t);
+        const baseX = cx + pt.x * scale * spread;
+        const baseY = cy + pt.y * scale * spread;
+
+        particles.push({
+          baseX,
+          baseY,
+          x: baseX + (Math.random() - 0.5) * 40,
+          y: baseY + (Math.random() - 0.5) * 40,
+          vx: 0,
+          vy: 0,
+          size: 1.2 + Math.random() * 2.2,
+          phase: Math.random() * Math.PI * 2,
+          hue: 330 + Math.random() * 25
+        });
+      }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('pointermove', (e) => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+    });
+
+    canvas.addEventListener('click', (e) => {
+      pulseBoost = 1.0;
+      phraseIdx = (phraseIdx + 1) % heartPhrases.length;
+
+      heartPhraseEl.classList.add('switching');
+      setTimeout(() => {
+        heartPhraseEl.textContent = heartPhrases[phraseIdx];
+        heartPhraseEl.classList.remove('switching');
+      }, 220);
+
+      if (tapHintEl) tapHintEl.style.opacity = '0.35';
+      spawnSticker(e.clientX, e.clientY);
+
+      particles.forEach((p) => {
+        const dx = p.x - e.clientX;
+        const dy = p.y - e.clientY;
+        const dist = Math.hypot(dx, dy) || 1;
+        if (dist < 180) {
+          const force = (180 - dist) / 180 * 8;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+        }
+      });
+    });
+
+    let time = 0;
+    function animate() {
+      time += 0.032;
+      ctx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height * 0.41;
+      const beat = Math.sin(time * 2.2) * 0.035 + Math.sin(time * 4.4) * 0.015 + pulseBoost * 0.14;
+      pulseBoost *= 0.9;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const targetX = cx + (p.baseX - cx) * (1 + beat) + Math.cos(time + p.phase) * 1.8;
+        const targetY = cy + (p.baseY - cy) * (1 + beat) + Math.sin(time + p.phase) * 1.8;
+
+        const mdx = p.x - pointer.x;
+        const mdy = p.y - pointer.y;
+        const mdist = Math.hypot(mdx, mdy) || 1;
+        if (mdist < 95) {
+          const rep = (95 - mdist) / 95 * 1.6;
+          p.vx += (mdx / mdist) * rep;
+          p.vy += (mdy / mdist) * rep;
+        }
+
+        p.vx += (targetX - p.x) * 0.075;
+        p.vy += (targetY - p.y) * 0.075;
+        p.vx *= 0.84;
+        p.vy *= 0.84;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        const alpha = 0.55 + Math.sin(time * 2 + p.phase) * 0.35;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 95%, 64%, ${alpha})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = `hsla(${p.hue}, 100%, 55%, 0.8)`;
+        ctx.fill();
+      }
+
+      ctx.shadowBlur = 0;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
