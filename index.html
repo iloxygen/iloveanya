@@ -18,44 +18,110 @@
 
     html, body {
       width: 100%;
-      height: 100%;
+      height: 100dvh;
       overflow: hidden;
-      background-color: #070508;
+      background-color: #060407;
       font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
       color: #ffffff;
     }
 
+    /* Фоновый слой */
     .bg-wrapper {
       position: fixed;
       inset: 0;
       z-index: 0;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 38%, rgba(255, 42, 109, 0.22) 0%, rgba(120, 14, 54, 0.1) 42%, rgba(7, 5, 8, 1) 80%),
-        linear-gradient(160deg, #0d070c 0%, #060407 55%, #12060d 100%);
+        radial-gradient(circle at 50% 38%, rgba(255, 42, 109, 0.2) 0%, rgba(110, 12, 48, 0.08) 45%, rgba(6, 4, 7, 1) 82%),
+        linear-gradient(160deg, #0c060b 0%, #050306 55%, #11050c 100%);
     }
 
     .bg-photo {
       position: absolute;
-      inset: -4%;
+      inset: -5%;
       background-image: url('anya.jpg');
       background-size: cover;
       background-position: center;
-      opacity: 0.44;
+      opacity: 0.42;
       transform: scale(1);
-      transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
-      filter: brightness(0.46) contrast(1.08) saturate(1.1);
+      transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), filter 0.8s ease;
+      filter: brightness(0.45) contrast(1.1) saturate(1.08);
+    }
+
+    /* Плавающие световые сферы (аура на фоне) */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(75px);
+      opacity: 0.38;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: driftOrb 16s infinite alternate ease-in-out;
+    }
+
+    .orb-1 {
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(255, 38, 108, 0.65), transparent 70%);
+      top: 8%;
+      left: -10%;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(168, 32, 95, 0.55), transparent 70%);
+      bottom: 12%;
+      right: -8%;
+      animation-delay: -6s;
+      animation-duration: 20s;
+    }
+
+    .orb-3 {
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 90, 145, 0.4), transparent 70%);
+      top: 45%;
+      left: 55%;
+      animation-delay: -11s;
+      animation-duration: 14s;
+    }
+
+    @keyframes driftOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(35px, -28px) scale(1.12); }
+      100% { transform: translate(-25px, 22px) scale(0.94); }
+    }
+
+    /* Кинематографичное зерно пленки */
+    .film-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.045;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
     .bg-vignette {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 50% 42%, transparent 25%, rgba(6, 4, 7, 0.85) 95%),
-        linear-gradient(to top, rgba(6, 4, 7, 0.94) 0%, rgba(6, 4, 7, 0.25) 45%, rgba(6, 4, 7, 0.65) 100%);
+        radial-gradient(circle at 50% 41%, transparent 22%, rgba(5, 3, 6, 0.86) 95%),
+        linear-gradient(to top, rgba(5, 3, 6, 0.95) 0%, rgba(5, 3, 6, 0.2) 45%, rgba(5, 3, 6, 0.65) 100%);
       pointer-events: none;
     }
 
+    /* Фоновый холст с парящими искрами */
+    #ambientCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Холст неонового сердца */
     #heartCanvas {
       position: fixed;
       inset: 0;
@@ -65,6 +131,7 @@
       cursor: pointer;
     }
 
+    /* Центральная зона с текстом внутри сердца */
     .center-stage {
       position: fixed;
       top: 41%;
@@ -118,9 +185,10 @@
       50% { opacity: 1; transform: translateY(-2px); }
     }
 
+    /* Нижняя стеклянная карточка */
     .bottom-card-wrap {
       position: fixed;
-      bottom: max(22px, env(safe-area-inset-bottom, 22px));
+      bottom: max(26px, env(safe-area-inset-bottom, 26px));
       left: 50%;
       transform: translateX(-50%);
       z-index: 4;
@@ -129,7 +197,7 @@
 
     .slide-card {
       position: relative;
-      background: rgba(18, 12, 20, 0.62);
+      background: rgba(18, 12, 20, 0.64);
       border: 1px solid rgba(255, 255, 255, 0.11);
       box-shadow:
         0 20px 50px rgba(0, 0, 0, 0.75),
@@ -240,9 +308,14 @@
 
   <div class="bg-wrapper">
     <div class="bg-photo" id="bgPhoto"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="film-grain"></div>
     <div class="bg-vignette"></div>
   </div>
 
+  <canvas id="ambientCanvas"></canvas>
   <canvas id="heartCanvas"></canvas>
 
   <div class="center-stage">
@@ -253,11 +326,11 @@
   <div class="bottom-card-wrap">
     <div class="slide-card" id="slideCard">
       <div class="card-top">
-        <span class="slide-tag" id="slideTag">глаза и вайб</span>
+        <span class="slide-tag" id="slideTag">осторожно</span>
         <span class="next-hint">жми дальше →</span>
       </div>
       <div class="slide-text" id="slideText">
-        У тебя нереальные глаза и лучший стиль, даже когда ты просто валяешься на полу после пар
+        Характер тяжелый, запросы на извинения завышенные, но так уж и быть, спишем это на красивые глаза
       </div>
       <div class="dots" id="dotsContainer"></div>
     </div>
@@ -277,23 +350,23 @@
 
     const slides = [
       {
-        tag: "глаза и вайб",
-        text: "У тебя нереальные глаза и лучший стиль, даже когда ты просто валяешься на полу после пар",
+        tag: "осторожно",
+        text: "Характер тяжелый, запросы на извинения завышенные, но так уж и быть, спишем это на красивые глаза",
         scale: "scale(1.0) translate(0px, 0px)"
       },
       {
-        tag: "главный токсик",
-        text: "Иногда ты бываешь максимально противной и требуешь извинений на коленях, но в этом весь твой шарм",
+        tag: "вайб",
+        text: "Холодный ветер, бетон и ноль лишних сантиментов. В тебе сразу чувствуется родной вайб",
         scale: "scale(1.07) translate(-1%, -1%)"
       },
       {
-        tag: "поддержка 100%",
-        text: "Обожаю твою веру в меня: «не сомневалась что проиграешь в теннис, горжусььь»",
+        tag: "баланс",
+        text: "У меня слишком высокая планка на людей, чтобы тратить время на простых. Так что считай это комплиментом",
         scale: "scale(1.04) translate(1%, -1.5%)"
       },
       {
-        tag: "наша классика",
-        text: "Даже после ночных разборов полётов и фразы «убейте меня» ты всё равно остаёшься самой родной",
+        tag: "факт",
+        text: "Даже когда ты максимально невыносима, рядом с тобой все равно интереснее, чем где-либо еще",
         scale: "scale(1.08) translate(0px, 1%)"
       }
     ];
@@ -365,6 +438,12 @@
       setTimeout(() => el.remove(), 1350);
     }
 
+    // --- ФОНОВЫЕ ИСКРЫ / ЗВЕЗДНАЯ ПЫЛЬ ---
+    const ambCanvas = document.getElementById('ambientCanvas');
+    const ambCtx = ambCanvas.getContext('2d');
+    let ambParticles = [];
+
+    // --- НЕОНОВОЕ СЕРДЦЕ ---
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
     let width, height, particles = [];
@@ -375,10 +454,33 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
+
+      ambCanvas.width = width * dpr;
+      ambCanvas.height = height * dpr;
+      ambCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      initAmbient();
       initParticles();
+    }
+
+    function initAmbient() {
+      ambParticles = [];
+      const count = width < 600 ? 45 : 80;
+      for (let i = 0; i < count; i++) {
+        ambParticles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 0.6 + Math.random() * 1.8,
+          vy: -(0.15 + Math.random() * 0.45),
+          vx: (Math.random() - 0.5) * 0.25,
+          alpha: 0.15 + Math.random() * 0.45,
+          twinkle: Math.random() * Math.PI * 2
+        });
+      }
     }
 
     function heartPoint(t) {
@@ -444,55 +546,3 @@
           const force = (180 - dist) / 180 * 8;
           p.vx += (dx / dist) * force;
           p.vy += (dy / dist) * force;
-        }
-      });
-    });
-
-    let time = 0;
-    function animate() {
-      time += 0.032;
-      ctx.clearRect(0, 0, width, height);
-
-      const cx = width / 2;
-      const cy = height * 0.41;
-      const beat = Math.sin(time * 2.2) * 0.035 + Math.sin(time * 4.4) * 0.015 + pulseBoost * 0.14;
-      pulseBoost *= 0.9;
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        const targetX = cx + (p.baseX - cx) * (1 + beat) + Math.cos(time + p.phase) * 1.8;
-        const targetY = cy + (p.baseY - cy) * (1 + beat) + Math.sin(time + p.phase) * 1.8;
-
-        const mdx = p.x - pointer.x;
-        const mdy = p.y - pointer.y;
-        const mdist = Math.hypot(mdx, mdy) || 1;
-        if (mdist < 95) {
-          const rep = (95 - mdist) / 95 * 1.6;
-          p.vx += (mdx / mdist) * rep;
-          p.vy += (mdy / mdist) * rep;
-        }
-
-        p.vx += (targetX - p.x) * 0.075;
-        p.vy += (targetY - p.y) * 0.075;
-        p.vx *= 0.84;
-        p.vy *= 0.84;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        const alpha = 0.55 + Math.sin(time * 2 + p.phase) * 0.35;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 95%, 64%, ${alpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `hsla(${p.hue}, 100%, 55%, 0.8)`;
-        ctx.fill();
-      }
-
-      ctx.shadowBlur = 0;
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  </script>
-</body>
-</html>
